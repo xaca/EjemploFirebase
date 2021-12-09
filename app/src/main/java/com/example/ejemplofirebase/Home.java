@@ -21,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
-public class Home extends AppCompatActivity {
+public class Home extends AppCompatActivity implements View.OnClickListener {
 
     private Button btn_cerrar_sesion;
     private FirebaseAuth mAuth;
@@ -53,21 +53,31 @@ public class Home extends AppCompatActivity {
         ll = findViewById(R.id.contenedor);
 
         db = FirebaseDatabase.getInstance();
-        dr1 = db.getReference(usuario.getUid()).child("datos").child("-MqRQ-ZFhw7-BwaIOBKY");
-        /*dr1.addValueEventListener(new ValueEventListener() {
+        dr1 = db.getReference(usuario.getUid()).child("datos");
+        //dr1 = db.getReference(usuario.getUid()).child("datos").child("-MqRQ-ZFhw7-BwaIOBKY");
+        dr1.addValueEventListener(new ValueEventListener() {
             //listar
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Usuario usuario;//Modelo de datos
                 TextView temp;
+                LinearLayout lh;
+                Button btn;
                 int cont = 0;
 
                 for(DataSnapshot datos:snapshot.getChildren()){
                     usuario = datos.getValue(Usuario.class);
                     temp = new TextView(Home.this);
-                    temp.setText(usuario.getNombre()+" "+ usuario.getApellido()+" "+ usuario.getCorreo());
+                    temp.setText(usuario.getNombre()+" "+ usuario.getApellido());
                     temp.setTextColor(cont++%2==0?Color.RED:Color.BLUE);
-                    ll.addView(temp);
+                    lh = new LinearLayout(Home.this);
+                    lh.setOrientation(LinearLayout.HORIZONTAL);
+                    lh.addView(temp);
+                    btn = new Button(Home.this);
+                    btn.setText("Ver detalle");
+                    btn.setOnClickListener(Home.this);
+                    lh.addView(btn);
+                    ll.addView(lh);
                 }
             }
 
@@ -75,7 +85,7 @@ public class Home extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });*/
+        });
 
         //Ingresar
         //dr2 = dr1.push();
@@ -87,5 +97,11 @@ public class Home extends AppCompatActivity {
         map.put("apellido","Rave");
         map.put("clave","567891");
         dr1.updateChildren(map);*/
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent ver_detalle = new Intent(Home.this,VerDetalle.class);
+        startActivity(ver_detalle);
     }
 }
