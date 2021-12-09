@@ -61,9 +61,10 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Usuario usuario;//Modelo de datos
-                TextView temp;
+                TextView temp,t_error;
                 LinearLayout lh;
                 Button btn;
+                boolean bandera = false;
                 int cont = 0;
 
                 for(DataSnapshot datos:snapshot.getChildren()){
@@ -81,6 +82,13 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                     btn.setOnClickListener(Home.this);
                     lh.addView(btn);
                     ll.addView(lh);
+                    bandera = true;
+                }
+
+                if(!bandera){
+                    t_error = new TextView(Home.this);
+                    t_error.setText("No se encontraron registros");
+                    ll.addView(t_error);
                 }
             }
 
@@ -92,7 +100,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
         //Ingresar
         //dr2 = dr1.push();
-        //dr2.setValue(new Usuario("Giorgio","Tobon","g@a.com","654321"));
+        //dr2.setValue(new Usuario("Luisa","Maya","tr@a.com","345521"));
 
 
     }

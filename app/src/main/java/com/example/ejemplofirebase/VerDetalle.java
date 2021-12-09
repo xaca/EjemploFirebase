@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.core.view.View;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class VerDetalle extends AppCompatActivity {
 
@@ -30,15 +32,20 @@ public class VerDetalle extends AppCompatActivity {
 
         //dr1 = db.getReference(usuario.getUid()).child("datos").child("-MqRQ-ZFhw7-BwaIOBKY");
 
-        llaves = getIntent().getExtras().getStringArray("id");
+        llaves = getIntent().getExtras().getStringArray("datos");
 
         FirebaseDatabase db;
         db = FirebaseDatabase.getInstance();
+
+        System.out.println(llaves[0]+" "+llaves[1]);
+
         dr1 = db.getReference(llaves[0]).child("datos").child(llaves[1]);
         dr1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                System.out.println(snapshot.getChildren());
+
+                llenarCamposUI(snapshot.getValue(Usuario.class));
+
             }
 
             @Override
@@ -56,12 +63,22 @@ public class VerDetalle extends AppCompatActivity {
         });
     }
 
-    public void actualizarCampos(){
-        //Editar
+    public void llenarCamposUI(Usuario usuario){
+        TextView nombre,apellido,clave,correo;
+        nombre = findViewById(R.id.txt_nombre_detalle);
+        apellido = findViewById(R.id.txt_apellido_detalle);
+        correo = findViewById(R.id.txt_correo_detalle);
+        clave = findViewById(R.id.txt_clave_detalle);
+        clave.setEnabled(false);
+        nombre.setText(usuario.getNombre());
+        apellido.setText(usuario.getApellido());
+        correo.setText(usuario.getCorreo());
+        clave.setText(usuario.getClave());
+        /*//Editar
         HashMap map = new HashMap();
         map.put("apellido","Rave");
         map.put("clave","567891");
-        dr1.updateChildren(map);
+        dr1.updateChildren(map);*/
     }
 
 }
