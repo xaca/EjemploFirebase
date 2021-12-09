@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -66,6 +67,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 int cont = 0;
 
                 for(DataSnapshot datos:snapshot.getChildren()){
+                    System.out.println(datos.getKey());
                     usuario = datos.getValue(Usuario.class);
                     temp = new TextView(Home.this);
                     temp.setText(usuario.getNombre()+" "+ usuario.getApellido());
@@ -74,6 +76,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                     lh.setOrientation(LinearLayout.HORIZONTAL);
                     lh.addView(temp);
                     btn = new Button(Home.this);
+                    btn.setTag(datos.getKey());
                     btn.setText("Ver detalle");
                     btn.setOnClickListener(Home.this);
                     lh.addView(btn);
@@ -91,17 +94,15 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         //dr2 = dr1.push();
         //dr2.setValue(new Usuario("Giorgio","Tobon","g@a.com","654321"));
 
-        /*
-        //Editar
-        HashMap map = new HashMap();
-        map.put("apellido","Rave");
-        map.put("clave","567891");
-        dr1.updateChildren(map);*/
+
     }
 
     @Override
     public void onClick(View v) {
+        //Toast.makeText(Home.this, v.getTag().toString(), Toast.LENGTH_SHORT).show();
         Intent ver_detalle = new Intent(Home.this,VerDetalle.class);
+        //ver_detalle.putExtra("id",v.getTag().toString());
+        ver_detalle.putExtra("datos",new String[]{usuario.getUid(),v.getTag().toString()});
         startActivity(ver_detalle);
     }
 }
