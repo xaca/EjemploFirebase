@@ -10,8 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.ejemplofirebase.modelo.Constantes;
+import com.example.ejemplofirebase.modelo.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -19,8 +20,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
 
 public class Home extends AppCompatActivity implements View.OnClickListener {
 
@@ -54,7 +53,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         ll = findViewById(R.id.contenedor);
 
         db = FirebaseDatabase.getInstance();
-        dr1 = db.getReference(usuario.getUid()).child("datos");
+        dr1 = db.getReference(usuario.getUid()).child(Constantes.DATOS);
         //dr1 = db.getReference(usuario.getUid()).child("datos").child("-MqRQ-ZFhw7-BwaIOBKY");
         dr1.addValueEventListener(new ValueEventListener() {
             //listar
@@ -64,28 +63,29 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 TextView temp,t_error;
                 LinearLayout lh;
                 Button btn;
-                boolean bandera = false;
                 int cont = 0;
 
-                for(DataSnapshot datos:snapshot.getChildren()){
-                    System.out.println(datos.getKey());
-                    usuario = datos.getValue(Usuario.class);
-                    temp = new TextView(Home.this);
-                    temp.setText(usuario.getNombre()+" "+ usuario.getApellido());
-                    temp.setTextColor(cont++%2==0?Color.RED:Color.BLUE);
-                    lh = new LinearLayout(Home.this);
-                    lh.setOrientation(LinearLayout.HORIZONTAL);
-                    lh.addView(temp);
-                    btn = new Button(Home.this);
-                    btn.setTag(datos.getKey());
-                    btn.setText("Ver detalle");
-                    btn.setOnClickListener(Home.this);
-                    lh.addView(btn);
-                    ll.addView(lh);
-                    bandera = true;
+                if(snapshot.exists())
+                {
+                    for (DataSnapshot datos: snapshot.getChildren())
+                    {
+                        System.out.println(datos.getKey());
+                        usuario = datos.getValue(Usuario.class);
+                        temp = new TextView(Home.this);
+                        temp.setText(usuario.getNombre() + " " + usuario.getApellido());
+                        temp.setTextColor(cont++ % 2 == 0 ? Color.RED : Color.BLUE);
+                        lh = new LinearLayout(Home.this);
+                        lh.setOrientation(LinearLayout.HORIZONTAL);
+                        lh.addView(temp);
+                        btn = new Button(Home.this);
+                        btn.setTag(datos.getKey());
+                        btn.setText("Ver detalle");
+                        btn.setOnClickListener(Home.this);
+                        lh.addView(btn);
+                        ll.addView(lh);
+                    }
                 }
-
-                if(!bandera){
+                else{
                     t_error = new TextView(Home.this);
                     t_error.setText("No se encontraron registros");
                     ll.addView(t_error);
@@ -97,11 +97,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
             }
         });
-
-        //Ingresar
-        //dr2 = dr1.push();
-        //dr2.setValue(new Usuario("Luisa","Maya","tr@a.com","345521"));
-
 
     }
 

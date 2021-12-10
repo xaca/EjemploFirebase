@@ -1,6 +1,8 @@
-package com.example.ejemplofirebase;
+package com.example.ejemplofirebase.modelo;
 
 public class Usuario {
+
+    private String uid;
     private String nombre;
     private String apellido;
     private String correo;
@@ -10,7 +12,8 @@ public class Usuario {
 
     }
 
-    public Usuario(String nombre,String apellido,String correo,String clave){
+    public Usuario(String uid,String nombre,String apellido,String correo,String clave){
+        this.setUid(uid);
         this.setNombre(nombre);
         this.setApellido(apellido);
         this.setCorreo(correo);
@@ -48,5 +51,13 @@ public class Usuario {
 
     public void setClave(String clave) {
         this.clave = clave;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }
